@@ -114,10 +114,7 @@ Click Run->Edit Configuration->+->Maven->
 Command line -> spring-boot:run
 
 #
-create database project;
-//optional
-create database efas;
-create database pmt;
+create database mathemagica;
 
 Run the project
 Hibernate will create tables for you
