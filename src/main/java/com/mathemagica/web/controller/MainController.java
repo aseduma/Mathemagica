@@ -29,6 +29,8 @@ public class MainController {
     @RequestMapping(value={"/", "index"}, method = RequestMethod.GET)
     public ModelAndView index(){
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("logoutMessage","Are you sure you want to log out?<br/>" +
+                "Press No if you want to continue work. Press Yes to logout current user.");
         modelAndView.setViewName("index");
         return modelAndView;
     }
