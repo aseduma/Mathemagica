@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by Azael on 2017/07/20.
@@ -57,18 +60,18 @@ public class MainController {
     public ModelAndView changePassword(@Valid UserForm userForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         User user = userService.findUserByEmail(userForm.getEmail());
-        if (user != null) {
-            user.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
-            userService.updateUser(user);
-            modelAndView.addObject("successMessage", "User password changed successfully");
-            modelAndView.setViewName("index");
-        }else{
+        if (user == null) {
             bindingResult
                     .rejectValue("email", "error.user",
                             "User with the email provided does not exist");
         }
-        if (bindingResult.hasErrors()) {
+        if (!isValidForm(bindingResult.getAllErrors(),false)) {
             modelAndView.setViewName("user/forgot_password/index");
+        }else{
+            user.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
+            userService.updateUser(user);
+            modelAndView.addObject("successMessage", "User password changed successfully");
+            modelAndView.setViewName("index");
         }
         return modelAndView;
     }
@@ -89,7 +92,7 @@ public class MainController {
                     .rejectValue("email", "error.user",
                             "There is already a user registered with the email provided");
         }
-        if (bindingResult.hasErrors()) {
+        if (!isValidForm(bindingResult.getAllErrors(),true)) {
             modelAndView.setViewName("user/register/index");
         } else {
             userService.saveUser(userForm);
@@ -100,5 +103,28 @@ public class MainController {
         return modelAndView;
     }
 
+    private boolean isValidForm(List<ObjectError> objectErrors, boolean isFullValidation) {
+        for (ObjectError objectError : objectErrors){
+            if(((FieldError)objectError).getField().contains("email")
+                    || ((FieldError)objectError).getField().contains("password")
+                    ){
+                return false;
+            }
 
+        }
+        return isFullValidForm(objectErrors, isFullValidation);
+    }
+
+    private boolean isFullValidForm(List<ObjectError> objectErrors, boolean isFullValidation ) {
+        for (ObjectError objectError : objectErrors){
+            if(isFullValidation){
+                if(((FieldError)objectError).getField().contains("name")
+                        || ((FieldError)objectError).getField().contains("surname")
+                        ){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
