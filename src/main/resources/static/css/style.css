@@ -1,0 +1,19 @@
+body {
+	padding-top: 500px;
+}
+
+ul.dropdown-lr {
+  width: 300px;
+}
+
+@media (max-width: 768px) {
+	.dropdown-lr h3 {
+		color: #eee;
+	}
+	.dropdown-lr label {
+		color: #eee;
+	}
+}
+label.validation-message {
+    color: #a94442;
+}

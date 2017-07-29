@@ -26,19 +26,28 @@ public class MainController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value={"/", "index"}, method = RequestMethod.GET)
-    public ModelAndView index(){
+    @RequestMapping(value={"/", "index", "register"}, method = RequestMethod.GET)
+    public ModelAndView index(UserForm userForm){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("logoutMessage","Are you sure you want to log out?<br/>" +
-                "Press No if you want to continue work. Press Yes to logout current user.");
-        modelAndView.setViewName("index");
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //User user = userService.findUserByEmail(authentication.getName());
+        //if(user != null) {
+          //  modelAndView.setViewName("home/examples");
+        //}else{
+          /*  modelAndView.addObject("logoutMessage", "Are you sure you want to log out?<br/>" +
+                    "Press No if you want to continue work. Press Yes to logout current user.");*/
+            modelAndView.setViewName("index");
+        //}
+
         return modelAndView;
     }
 
     @RequestMapping(value="/login", method = RequestMethod.GET)
-    public ModelAndView login(@RequestParam(value = "error", required = false) String error){
+    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
+                              UserForm userForm){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("user/login/index");
+        modelAndView.addObject("showLogin","true");
+        modelAndView.setViewName("index");
         return modelAndView;
     }
 
@@ -49,11 +58,11 @@ public class MainController {
         return modelAndView;
     }
 
-
     @RequestMapping(value="/forgot_password", method = RequestMethod.GET)
     public ModelAndView forgotPassword(UserForm userForm){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("user/forgot_password/index");
+        modelAndView.addObject("showForgotPassword", "true");
+        modelAndView.setViewName("index");
         return modelAndView;
     }
 
@@ -61,47 +70,52 @@ public class MainController {
     @RequestMapping(value = "/forgot_password", method = RequestMethod.POST)
     public ModelAndView changePassword(@Valid UserForm userForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        User user = userService.findUserByEmail(userForm.getEmail());
-        if (user == null) {
-            bindingResult
-                    .rejectValue("email", "error.user",
-                            "User with the email provided does not exist");
-        }
-        if (!isValidForm(bindingResult.getAllErrors(),false)) {
-            modelAndView.setViewName("user/forgot_password/index");
+        modelAndView.addObject("showForgotPassword", "true");
+        modelAndView.setViewName("index");
+        if (!isValidForm(bindingResult.getAllErrors(),true)) {
+            return modelAndView;
         }else{
+            User user = userService.findUserByEmail(userForm.getEmail());
+            if (user == null) {
+                bindingResult
+                        .rejectValue("email", "error.userForm",
+                                "User with the email provided does not exist");
+            }
+            if(!user.getName().equals(userForm.getName())){
+                bindingResult
+                        .rejectValue("name", "error.userForm",
+                                "User with the name provided does not exist");
+                return modelAndView;
+            }
+            if(!user.getSurname().equals(userForm.getSurname())){
+                bindingResult
+                        .rejectValue("surname", "error.userForm",
+                                "User with the surname provided does not exist");
+                return modelAndView;
+            }
             user.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
             userService.updateUser(user);
+            modelAndView.addObject("showForgotPassword", null);
             modelAndView.addObject("successMessage", "User password changed successfully");
-            modelAndView.setViewName("index");
+            return modelAndView;
         }
-        return modelAndView;
-    }
-
-    @RequestMapping(value="/register", method = RequestMethod.GET)
-    public ModelAndView register(UserForm userForm){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("user/register/index");
-        return modelAndView;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView createUser(@Valid UserForm userForm, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
-        User userExists = userService.findUserByEmail(userForm.getEmail());
-        if (userExists != null) {
+        User user = userService.findUserByEmail(userForm.getEmail());
+        if (user != null) {
             bindingResult
-                    .rejectValue("email", "error.user",
+                    .rejectValue("email", "error.userForm",
                             "There is already a user registered with the email provided");
         }
-        if (!isValidForm(bindingResult.getAllErrors(),true)) {
-            modelAndView.setViewName("user/register/index");
-        } else {
+        if (isValidForm(bindingResult.getAllErrors(),true)) {
             userService.saveUser(userForm);
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.setViewName("index");
-
         }
+        modelAndView.setViewName("index");
         return modelAndView;
     }
 
