@@ -69,7 +69,7 @@
                     </ul>
                 </li>
                 <li sec:authorize="isAnonymous()" class="dropdown" th:if="${showForgotPassword} == null" th:class="${showLogin} != null ? 'dropdown open' : dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" th:aria-expanded="${showLogin} != null ? true : false">Log In <span class="fa fa-user"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" >Log In <span class="fa fa-user"></span></a>
                     <ul class="dropdown-menu dropdown-lr" role="menu">
                         <div class="col-lg-12">
                             <div class="text-center"><h3><b>Log In</b></h3></div>
@@ -113,7 +113,7 @@
                     </ul>
                 </li>
                 <li sec:authorize="isAnonymous()" class="dropdown" th:if="${showForgotPassword} != null" th:class="'dropdown open'">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" th:aria-expanded="true">Forgot Password <span class="fa fa-key"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Forgot Password <span class="fa fa-key"></span></a>
                     <ul class="dropdown-menu dropdown-lr" role="menu">
                         <div class="col-lg-12">
                             <div class="text-center"><h3><b>Reset Password</b></h3></div>

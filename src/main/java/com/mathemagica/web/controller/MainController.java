@@ -41,7 +41,7 @@ public class MainController {
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,
                               UserForm userForm){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("showLogin",error);
+        modelAndView.addObject("showLogin","true");
         modelAndView.setViewName("index");
         return modelAndView;
     }
