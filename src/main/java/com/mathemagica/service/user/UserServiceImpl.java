@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void update(User user) {
-
+        userRepository.save(user);
     }
 
     private void saveUserRole(User user, String roleName) {
