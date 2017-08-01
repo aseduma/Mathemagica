@@ -1,6 +1,7 @@
 package com.mathemagica.web.controller;
 
 import com.mathemagica.model.user.User;
+import com.mathemagica.service.user.LoginService;
 import com.mathemagica.service.user.UserService;
 import com.mathemagica.web.view.user.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,20 +26,13 @@ public class MainController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private LoginService loginService;
 
     @RequestMapping(value={"/", "index", "register"}, method = RequestMethod.GET)
     public ModelAndView index(UserForm userForm){
         ModelAndView modelAndView = new ModelAndView();
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //User user = userService.findUserByEmail(authentication.getName());
-        //if(user != null) {
-          //  modelAndView.setViewName("home/examples");
-        //}else{
-          /*  modelAndView.addObject("logoutMessage", "Are you sure you want to log out?<br/>" +
-                    "Press No if you want to continue work. Press Yes to logout current user.");*/
-            modelAndView.setViewName("index");
-        //}
-
+        modelAndView.setViewName("index");
         return modelAndView;
     }
 
@@ -46,7 +40,7 @@ public class MainController {
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,
                               UserForm userForm){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("showLogin","true");
+        modelAndView.addObject("showLogin",error);
         modelAndView.setViewName("index");
         return modelAndView;
     }
@@ -114,8 +108,10 @@ public class MainController {
             userService.saveUser(userForm);
             modelAndView.addObject("successMessage", "User has been registered successfully");
             modelAndView.setViewName("index");
+        }else {
+            modelAndView.addObject("showRegister",true);
+            modelAndView.setViewName("index");
         }
-        modelAndView.setViewName("index");
         return modelAndView;
     }
 
