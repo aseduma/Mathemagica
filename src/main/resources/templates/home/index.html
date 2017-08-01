@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="layout :: html-head" th:with="title='Welcome'"></head>
+<body>
+<nav th:replace="layout :: html-nav"></nav>
+<div class="container">
+    <div class="row">
+        <h1>Mathemagica Math Solver</h1>
+        <br>
+        <p class="lead">Welcome <strong><span th:text="${user.name} + ' ' + ${user.surname}" /></strong></p>
+    </div>
+</div><!-- /.container -->
+<div th:replace="layout :: html-scripts"></div>
+</body>
+</html>

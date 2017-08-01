@@ -5,6 +5,7 @@ import com.mathemagica.service.user.LoginService;
 import com.mathemagica.service.user.UserService;
 import com.mathemagica.web.view.user.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,47 +31,37 @@ public class MainController {
         this.loginService = loginService;
     }
 
-    @RequestMapping(value={"/", "index", "register"}, method = RequestMethod.GET)
+    @RequestMapping(value={"/", "index", "register", "logout"}, method = RequestMethod.GET)
     public ModelAndView index(UserForm userForm){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
+        ModelAndView modelAndView = getModelAndView();
         return modelAndView;
     }
 
     @RequestMapping(value="/login", method = RequestMethod.GET)
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,
                               UserForm userForm){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("showLogin","true");
-        modelAndView.setViewName("index");
-        return modelAndView;
-    }
-
-    @RequestMapping(value="/logout", method = RequestMethod.GET)
-    public ModelAndView logout(){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
+        ModelAndView modelAndView = getModelAndView();
+        modelAndView.addObject("showLogin",true);
         return modelAndView;
     }
 
     @RequestMapping(value="/forgot_password", method = RequestMethod.GET)
     public ModelAndView forgotPassword(UserForm userForm){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("showForgotPassword", "true");
-        modelAndView.setViewName("index");
+        ModelAndView modelAndView = getModelAndView();
+        modelAndView.addObject("showForgotPassword", true);
         return modelAndView;
     }
 
 
     @RequestMapping(value = "/forgot_password", method = RequestMethod.POST)
     public ModelAndView changePassword(@Valid UserForm userForm, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("showForgotPassword", "true");
-        modelAndView.setViewName("index");
+        ModelAndView modelAndView = getModelAndView();
+
+        modelAndView.addObject("showForgotPassword", true);
         if (bindingResult.hasErrors()) {
             return modelAndView;
         }else{
-            User user = userService.findUserByEmail(userForm.getEmail());
+            User user = userService.getByEmail(userForm.getEmail());
             if (user == null) {
                 bindingResult
                         .rejectValue("email", "error.userForm",
@@ -89,7 +80,7 @@ public class MainController {
                 return modelAndView;
             }
             user.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
-            userService.updateUser(user);
+            userService.update(user);
             modelAndView.addObject("showForgotPassword", null);
             modelAndView.addObject("successMessage", "User password changed successfully");
             loginService.autoLogin(userForm.getEmail());
@@ -99,9 +90,9 @@ public class MainController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ModelAndView createUser(@Valid UserForm userForm, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("index");
-        User user = userService.findUserByEmail(userForm.getEmail());
+        ModelAndView modelAndView = getModelAndView();
+
+        User user = userService.getByEmail(userForm.getEmail());
         if (user != null) {
             bindingResult
                     .rejectValue("email", "error.userForm",
@@ -110,9 +101,21 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("showRegister",true);
         }else {
-            userService.saveUser(userForm);
+            userService.save(userForm);
             modelAndView.addObject("successMessage", "User has been registered successfully");
             loginService.autoLogin(userForm.getEmail());
+        }
+        return modelAndView;
+    }
+
+    private ModelAndView getModelAndView(){
+        ModelAndView modelAndView = new ModelAndView();
+        User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user != null) {
+            modelAndView.addObject("user", user);
+            modelAndView.setViewName("home/index");
+        }else{
+            modelAndView.setViewName("index");
         }
         return modelAndView;
     }

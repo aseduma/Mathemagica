@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User findUserByEmail(String email) {
+    public User getByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public void saveUser(UserForm userForm) {
+    public void save(UserForm userForm) {
         User user = new User();
         user.setEmail(userForm.getEmail());
         user.setName(userForm.getName());
@@ -45,13 +45,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void delete(User user) {
         userRoleRepository.findAllByUser(user).forEach(userRoleRepository::delete);
         userRepository.delete(user);
     }
 
     @Override
-    public void updateUser(User user) {
+    public void update(User user) {
 
     }
 
