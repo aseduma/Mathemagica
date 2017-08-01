@@ -4,8 +4,10 @@ import com.mathemagica.model.user.User;
 import com.mathemagica.model.user.UserRole;
 import com.mathemagica.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,5 +48,15 @@ public class LoginService implements UserDetailsService{
         grantedAuthoritySet.addAll(userRoles.stream().map(userRole ->
                 new SimpleGrantedAuthority(userRole.getRole().getRole())).collect(Collectors.toList()));
         return new ArrayList<>(grantedAuthoritySet);
+    }
+
+    public void autoLogin(String username){
+        UserDetails userDetails = this.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken (userDetails, null, userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(token);
+        if(token.isAuthenticated()) {
+            SecurityContextHolder.getContext().setAuthentication(token);
+        }
     }
 }
