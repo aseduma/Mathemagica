@@ -1,6 +1,7 @@
 package com.mathemagica.web.controller;
 
 import com.mathemagica.model.user.User;
+import com.mathemagica.service.nav.NavService;
 import com.mathemagica.service.user.LoginService;
 import com.mathemagica.service.user.UserService;
 import com.mathemagica.web.view.user.UserForm;
@@ -24,11 +25,13 @@ public class MainController {
 
     private UserService userService;
     private LoginService loginService;
+    private NavService navService;
 
     @Autowired
-    public MainController(UserService userService, LoginService loginService) {
+    public MainController(UserService userService, LoginService loginService, NavService navService) {
         this.userService = userService;
         this.loginService = loginService;
+        this.navService = navService;
     }
 
     @RequestMapping(value={"/", "index", "register", "logout"}, method = RequestMethod.GET)
@@ -111,14 +114,15 @@ public class MainController {
     }
 
     private ModelAndView getModelAndView(){
-        ModelAndView modelAndView = new ModelAndView();
         User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        ModelAndView modelAndView = new ModelAndView();
         if(user != null) {
             modelAndView.addObject("user", user);
             modelAndView.setViewName("home/index");
         }else{
             modelAndView.setViewName("index");
         }
+        modelAndView.addObject("navs",navService.createNav(user,"Home"));
         return modelAndView;
     }
 }

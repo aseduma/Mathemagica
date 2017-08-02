@@ -2,6 +2,33 @@
 Spring MVC, Hibernate, JPA, Thymeleaf, Maven and Math
 
 #
+install maven & jdk 8
+
+#
+IntelliJ
+
+#
+Click Run->Edit Configuration->+->Maven->
+Command line -> spring-boot:run
+
+#
+create database app;
+
+Run the project
+Hibernate will create tables for you
+#
+INSERT INTO `app`.`role` (`role`, `description`) VALUES ('ADMIN', 'Administrator');
+#
+INSERT INTO `app`.`role` (`role`, `description`) VALUES ('USER', 'User');
+#
+INSERT INTO `app`.`role` (`role`, `description`) VALUES ('ANONYMOUS', 'Anonymous');
+#
+INSERT INTO `app`.`nav` (`href`, `icon`, `name`) VALUES ('/', 'fa fa-home', 'Home');
+#
+INSERT INTO `app`.`nav` (`href`, `icon`, `name`) VALUES ('/about', 'fa fa-wpforms', 'About');
+
+
+#
 A Spring boot application that solve maths equations line by line, 
 The application will allow students/learners to pass maths with flying colours,
 less time for homeworks and assignments. The application will answer any question asked in the
@@ -103,22 +130,4 @@ Unit 12 - Quadratic Functions
         12.4  Solve Quadratics using Quadratic Formula
         Unit 12 REVIEW
 
-#
-install maven & jdk 8
 
-#
-IntelliJ
-
-#
-Click Run->Edit Configuration->+->Maven->
-Command line -> spring-boot:run
-
-#
-create database mathemagica;
-
-Run the project
-Hibernate will create tables for you
-#
-INSERT INTO `mathemagica`.`role` (`role`, `description`) VALUES ('ADMIN', 'Administrator');
-#
-INSERT INTO `mathemagica`.`role` (`role`, `description`) VALUES ('USER', 'User');

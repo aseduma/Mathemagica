@@ -1,5 +1,7 @@
 package com.mathemagica.model.user;
 
+import com.mathemagica.model.nav.Nav;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,18 +11,21 @@ import java.util.Set;
  */
 
 @Entity
-@Table(name = "role", catalog = "mathemagica")
+@Table(name = "role", catalog = "app")
 public class Role {
 
     @Id
-    @Column(name="role", nullable = false, unique = true)
+    @Column(name="role", nullable = false)
     private String role;
 
-    @Column(name="description")
+    @Column(name="description", nullable = false)
     private String description;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
     private Set<UserRole> userRoles = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    private Set<Nav> navs = new HashSet<>();
 
     public String getRole() {
         return role;
@@ -44,5 +49,13 @@ public class Role {
 
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public Set<Nav> getNavs() {
+        return navs;
+    }
+
+    public void setNavs(Set<Nav> navs) {
+        this.navs = navs;
     }
 }

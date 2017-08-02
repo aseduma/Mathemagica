@@ -30,7 +30,7 @@ public class DatabaseConfiguration {
     public BasicDataSource dataSource() {
         BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        basicDataSource.setUrl("jdbc:mysql://localhost:3306/mathemagica");
+        basicDataSource.setUrl("jdbc:mysql://localhost:3306/app");
         basicDataSource.setUsername("demo");
         basicDataSource.setPassword("xbox360");
         basicDataSource.setTestWhileIdle(true);
