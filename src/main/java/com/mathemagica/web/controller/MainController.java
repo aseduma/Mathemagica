@@ -66,6 +66,7 @@ public class MainController {
                 bindingResult
                         .rejectValue("email", "error.userForm",
                                 "User with the email provided does not exist");
+                return modelAndView;
             }
             if(!user.getName().equals(userForm.getName())){
                 bindingResult
@@ -81,10 +82,10 @@ public class MainController {
             }
             user.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
             userService.update(user);
+            loginService.autoLogin(userForm.getEmail());
             modelAndView.addObject("showForgotPassword", null);
             modelAndView.addObject("successMessage", "User password changed successfully");
-            loginService.autoLogin(userForm.getEmail());
-            return modelAndView;
+            return new ModelAndView("redirect:/index");
         }
     }
 
@@ -102,8 +103,9 @@ public class MainController {
             modelAndView.addObject("showRegister",true);
         }else {
             userService.save(userForm);
-            modelAndView.addObject("successMessage", "User has been registered successfully");
             loginService.autoLogin(userForm.getEmail());
+            modelAndView.addObject("successMessage", "User has been registered successfully");
+            return new ModelAndView("redirect:/index");
         }
         return modelAndView;
     }
