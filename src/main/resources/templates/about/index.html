@@ -11,37 +11,48 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="well well-sm">
-                    <form class="form-horizontal" method="post">
+                    <form id="contact-us-form" class="form-horizontal" action="#" th:action="@{/contact_us}" th:object="${contactUsForm}"
+                          method="post" role="form" autocomplete="off">
                         <fieldset>
                             <legend class="text-center header">Contact us</legend>
                             <div class="form-group">
                                 <div class="col-md-10 col-md-offset-1">
-                                    <input id="fname" name="name" type="text" placeholder="First Name" class="form-control" />
+                                    <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                           class="validation-message"></label>
+                                    <input id="name" name="name" type="text" placeholder="Name" class="form-control" th:field="*{name}" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-10 col-md-offset-1">
-                                    <input id="lname" name="name" type="text" placeholder="Last Name" class="form-control" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <input id="email" name="email" type="text" placeholder="Email Address" class="form-control" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-md-10 col-md-offset-1">
-                                    <input id="phone" name="phone" type="text" placeholder="Phone" class="form-control" />
+                                    <label th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"
+                                           class="validation-message"></label>
+                                    <input id="surname" name="name" type="text" placeholder="Surname" class="form-control" th:field="*{surname}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-10 col-md-offset-1">
+                                    <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                           class="validation-message"></label>
+                                    <input id="email" name="email" type="email" placeholder="Email Address" class="form-control" th:field="*{email}" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <label th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"
+                                           class="validation-message"></label>
+                                    <input id="phone" name="phone" type="number" placeholder="Phone Number" class="form-control" th:field="*{phoneNumber}"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-1">
+                                    <label th:if="${#fields.hasErrors('message')}" th:errors="*{message}"
+                                           class="validation-message"></label>
                                     <textarea class="form-control" id="message" name="message"
                                               placeholder="Enter your massage for us here. We will get back to you within 2 business days."
-                                              rows="7">
+                                              rows="7" th:field="*{message}">
                                     </textarea>
                                 </div>
                             </div>
@@ -62,10 +73,11 @@
                         <div class="panel-body text-center">
                             <h4>Address</h4>
                             <div>
-                                2217 Washington Blvd<br />
-                                Washington DC<br />
-                                #(703) 1234 1234<br />
-                                service@company.com<br />
+                                1431 Zone 4<br />
+                                Seshego<br />
+                                0742<br />
+                                +27743519649 / +27711290302<br />
+                                sedumaazael@gmail.com<br />
                             </div>
                             <hr />
                             <div id="map1" class="map">
@@ -84,7 +96,7 @@
 <script type="text/javascript">
     jQuery(function ($) {
         function init_map1() {
-            var myLocation = new google.maps.LatLng(38.885516, -77.09327200000001);
+            var myLocation = new google.maps.LatLng(23.8573, 29.3954);
             var mapOptions = {
                 center: myLocation,
                 zoom: 16

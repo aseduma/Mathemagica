@@ -3,6 +3,7 @@ package com.mathemagica.model.user;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +31,10 @@ public class User {
     @Column(name = "active")
     @ColumnDefault("false")
     private boolean active;
+
+    @Column(name = "time_stamp", nullable = false, updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date timestamp;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<UserRole> userRoles = new HashSet<>();
@@ -73,6 +78,14 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public Set<UserRole> getUserRoles() {
