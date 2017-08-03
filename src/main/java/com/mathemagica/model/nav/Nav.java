@@ -32,7 +32,6 @@ public class Nav {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role", nullable = false)
-    @ColumnDefault("'ANONYMOUS'")
     private Role role;
 
     @Column(name = "enabled")

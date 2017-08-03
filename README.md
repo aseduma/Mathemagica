@@ -23,9 +23,9 @@ INSERT INTO `app`.`role` (`role`, `description`) VALUES ('USER', 'User');
 #
 INSERT INTO `app`.`role` (`role`, `description`) VALUES ('ANONYMOUS', 'Anonymous');
 #
-INSERT INTO `app`.`nav` (`href`, `icon`, `name`) VALUES ('/', 'fa fa-home', 'Home');
+INSERT INTO `app`.`nav` (`href`, `icon`, `name`,`role`) VALUES ('/', 'fa fa-home', 'Home', 'Anonymous');
 #
-INSERT INTO `app`.`nav` (`href`, `icon`, `name`) VALUES ('/about', 'fa fa-wpforms', 'About');
+INSERT INTO `app`.`nav` (`href`, `icon`, `name`,`role`) VALUES ('/about', 'fa fa-wpforms', 'About', 'Anonymous');
 
 
 #
