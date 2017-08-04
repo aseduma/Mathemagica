@@ -1,5 +1,6 @@
 package com.mathemagica.web.controller.about;
 
+import com.mathemagica.model.about.ContactUs;
 import com.mathemagica.model.user.User;
 import com.mathemagica.service.about.ContactUsService;
 import com.mathemagica.service.nav.NavService;
@@ -44,7 +45,13 @@ public class AboutController {
         if (bindingResult.hasErrors()) {
             return modelAndView;
         }else{
-            contactUsService.save(contactUsForm);
+            ContactUs contactUs = new ContactUs();
+            contactUs.setName(contactUsForm.getName());
+            contactUs.setSurname(contactUsForm.getSurname());
+            contactUs.setEmail(contactUsForm.getEmail());
+            contactUs.setPhoneNumber(contactUsForm.getPhoneNumber());
+            contactUs.setMessage(contactUsForm.getMessage());
+            contactUsService.save(contactUs);
         }
         return modelAndView;
     }

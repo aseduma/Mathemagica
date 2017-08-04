@@ -1,5 +1,6 @@
 package com.mathemagica.configuration;
 
+import com.mathemagica.api.configuration.CustomBasicAuthenticationEntryPoint;
 import com.mathemagica.service.user.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,10 +25,13 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    private CustomBasicAuthenticationEntryPoint customBasicAuthenticationEntryPoint;
+
     @Override
-    protected void configure(AuthenticationManagerBuilder auth)
+    protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
             throws Exception {
-        auth
+        authenticationManagerBuilder
                 .eraseCredentials(true)
                 .userDetailsService(loginService)
                 .passwordEncoder(passwordEncoder());
@@ -58,7 +62,8 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
                 .rememberMeServices(rememberMeServices())
                 .key("remember-me-key")
                 .and().exceptionHandling()
-                .accessDeniedPage("/access-denied");
+                .accessDeniedPage("/access-denied")
+                .and().httpBasic().authenticationEntryPoint(customBasicAuthenticationEntryPoint);
 
     }
 

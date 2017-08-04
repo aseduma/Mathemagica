@@ -96,8 +96,7 @@ public class MainController {
     public ModelAndView createUser(@Valid UserForm userForm, BindingResult bindingResult) {
         ModelAndView modelAndView = getModelAndView();
 
-        User user = userService.getByEmail(userForm.getEmail());
-        if (user != null) {
+        if (userService.isUserExist(userForm.getEmail())) {
             bindingResult
                     .rejectValue("email", "error.userForm",
                             "There is already a user registered with the email provided");
@@ -105,14 +104,19 @@ public class MainController {
         if (bindingResult.hasErrors()) {
             modelAndView.addObject("showRegister",true);
         }else {
-            userService.save(userForm);
+            User user = new User();
+            user.setEmail(userForm.getEmail());
+            user.setName(userForm.getName());
+            user.setSurname(userForm.getSurname());
+            user.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
+            user.setActive(true);
+            userService.save(user);
             loginService.autoLogin(userForm.getEmail());
             modelAndView.addObject("successMessage", "User has been registered successfully");
             return new ModelAndView("redirect:/index");
         }
         return modelAndView;
     }
-
     private ModelAndView getModelAndView(){
         User user = userService.getByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         ModelAndView modelAndView = new ModelAndView();

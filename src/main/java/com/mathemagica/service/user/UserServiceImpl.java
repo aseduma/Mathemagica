@@ -6,10 +6,10 @@ import com.mathemagica.model.user.UserRole;
 import com.mathemagica.repository.user.RoleRepository;
 import com.mathemagica.repository.user.UserRepository;
 import com.mathemagica.repository.user.UserRoleRepository;
-import com.mathemagica.web.view.user.UserForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by Azael on 2017/07/13.
@@ -29,18 +29,27 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public User getByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public void save(UserForm userForm) {
-        User user = new User();
-        user.setEmail(userForm.getEmail());
-        user.setName(userForm.getName());
-        user.setSurname(userForm.getSurname());
-        user.setPassword(new BCryptPasswordEncoder().encode(userForm.getPassword()));
-        user.setActive(true);
+    public User getByNameAndSurname(String name, String surname) {
+        return userRepository.findByNameAndSurname(name,surname);
+    }
+
+    @Override
+    public boolean isUserExist(User user) {
+        return userRepository.findByEmail(user.getEmail()) != null;
+    }
+
+    @Override
+    public void save(User user) {
         userRepository.save(user);
         saveUserRole(user, "USER");
     }
@@ -54,6 +63,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public void update(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean isUserExist(String email) {
+        return userRepository.findByEmail(email) != null;
     }
 
     private void saveUserRole(User user, String roleName) {
