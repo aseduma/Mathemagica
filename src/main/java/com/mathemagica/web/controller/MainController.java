@@ -129,4 +129,17 @@ public class MainController {
         modelAndView.addObject("navs",navService.createNav(user,"Home"));
         return modelAndView;
     }
+    
+    /**
+        @RequestMapping(value = "/reports/download", method = RequestMethod.GET)
+	public void download(HttpServletResponse response) throws IOException {
+		String filePath ="test.txt";
+		response.setContentType("application/octet-stream");
+		Path path = Paths.get(filePath);
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + path.getFileName() + "\"");
+		response.setContentLength((int) Files.size(path));
+		Files.copy(path, response.getOutputStream());
+		response.flushBuffer();
+	}
+    */
 }
